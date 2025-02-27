@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoAirdrops - Les Prochains Airdrops</title>
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #d63031;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f6fa;
+            color: var(--dark);
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .filter-group select, 
+        .filter-group input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .search-bar {
+            flex: 2;
+            min-width: 300px;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary);
+        }
+        
+        .airdrop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .airdrop-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .airdrop-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .card-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            background-color: white;
+        }
+        
+        .card-header .token-info {
+            flex: 1;
+        }
+        
+        .token-info h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        
+        .token-info .token-ticker {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .card-body {
+            padding: 15px;
+        }
+        
+        .card-body .reward {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .info-row .label {
+            color: #636e72;
+        }
+        
+        .info-row .value {
+            font-weight: 600;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .status.active {
+            background-color: rgba(0, 184, 148, 0.2);
+            color: var(--success);
+        }
+        
+        .status.upcoming {
+            background-color: rgba(253, 203, 110, 0.2);
+            color: var(--warning);
+        }
+        
+        .status.ended {
+            background-color: rgba(214, 48, 49, 0.2);
+            color: var(--danger);
+        }
+        
+        .card-body .description {
+            margin-bottom: 15px;
+            line-height: 1.5;
+            font-size: 14px;
+            color: #636e72;
+        }
+        
+        .steps {
+            margin-top: 15px;
+        }
+        
+        .steps h4 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .steps ol {
+            padding-left: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .steps li {
+            margin-bottom: 5px;
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+        
+        .join-btn {
+            width: 100%;
+            text-align: center;
+            padding: 12px;
+            font-size: 16px;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        .pagination button {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            color: var(--dark);
+            border: 1px solid #ddd;
+        }
+        
+        .pagination button.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #636e72;
+        }
+        
+        .refresh-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .last-updated {
+            font-size: 14px;
+            color: #636e72;
+        }
+        
+        .empty-result {
+            text-align: center;
+            padding: 40px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .empty-result h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        @media (max-width: 768px) {
+            .filter-group, 
+            .search-bar {
+                min-width: 100%;
+            }
+            
+            .airdrop-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CryptoAirdrops</h1>
+        <p>Restez informé des meilleurs airdrops crypto et apprenez comment y participer</p>
+    </header>
+    
+    <div class="container">
+        <div class="refresh-bar">
+            <div class="last-updated">Dernière mise à jour: <span id="update-time">27 février 2025 à 12:00</span></div>
+            <button id="refresh-btn">Actualiser</button>
+        </div>
+        
+        <div class="filters">
+            <div class="search-bar">
+                <input type="text" placeholder="Rechercher un airdrop..." id="search-input">
+            </div>
+            <div class="filter-group">
+                <label for="status-filter">Statut</label>
+                <select id="status-filter">
+                    <option value="all">Tous</option>
+                    <option value="active">Actifs</option>
+                    <option value="upcoming">À venir</option>
+                    <option value="ended">Terminés</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="category-filter">Catégorie</label>
+                <select id="category-filter">
+                    <option value="all">Toutes</option>
+                    <option value="defi">DeFi</option>
+                    <option value="nft">NFT</option>
+                    <option value="gamefi">GameFi</option>
+                    <option value="layer2">Layer 2</option>
+                    <option value="dao">DAO</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="sort-by">Trier par</label>
+                <select id="sort-by">
+                    <option value="date-desc">Date (Récent d'abord)</option>
+                    <option value="date-asc">Date (Ancien d'abord)</option>
+                    <option value="value-desc">Valeur (Élevée d'abord)</option>
+                    <option value="value-asc">Valeur (Faible d'abord)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div id="airdrops-container" class="airdrop-grid">
+            <!-- Les airdrops seront injectés ici par JavaScript -->
+        </div>
+        
+        <div class="pagination">
+            <button>1</button>
+            <button class="active">2</button>
+            <button>3</button>
+            <button>4</button>
+            <button>5</button>
+            <button>></button>
+        </div>
+    </div>
+    
+    <script>
+        // Données fictives d'airdrops pour la démonstration
+        const airdrops = [
+            {
+                id: 1,
+                name: "ArbiSwap",
+                ticker: "ARBI",
+                logo: "/api/placeholder/40/40",
+                reward: "100-500 ARBI (estimé à $50-$250)",
+                status: "active",
+                category: "defi",
+                startDate: "2025-02-15",
+                endDate: "2025-03-15",
+                description: "ArbiSwap est un nouveau protocole d'échange décentralisé sur Arbitrum avec des frais réduits et des récompenses de liquidité améliorées.",
+                steps: [
+                    "Connectez votre portefeuille au site officiel ArbiSwap",
+                    "Effectuez au moins 5 transactions d'une valeur totale de 100$ minimum",
+                    "Fournissez de la liquidité dans au moins un pool pendant 7 jours",
+                    "Invitez 3 amis via votre lien de parrainage"
+                ],
+                website: "https://exemple-arbiswap.com",
+                documentation: "https://docs.arbiswap.com",
+                value: 150
+            },
+            {
+                id: 2,
+                name: "PixelVerse",
+                ticker: "PIXEL",
+                logo: "/api/placeholder/40/40",
+                reward: "10-50 PIXEL NFTs + jetons PIXEL",
+                status: "upcoming",
+                category: "nft",
+                startDate: "2025-03-10",
+                endDate: "2025-04-10",
+                description: "PixelVerse est un métaverse NFT où vous pouvez créer, commercer et jouer avec des actifs numériques basés sur des pixels.",
+                steps: [
+                    "Suivez PixelVerse sur Twitter et partagez leur post d'annonce",
+                    "Rejoignez leur serveur Discord et atteignez le niveau 3",
+                    "Créez un compte sur leur plateforme et complétez votre profil",
+                    "Participez à l'événement de création NFT hebdomadaire"
+                ],
+                website: "https://exemple-pixelverse.io",
+                documentation: "https://docs.pixelverse.io",
+                value: 300
+            },
+            {
+                id: 3,
+                name: "ZKSync Protocol",
+                ticker: "ZKP",
+                logo: "/api/placeholder/40/40",
+                reward: "50-200 ZKP",
+                status: "active",
+                category: "layer2",
+                startDate: "2025-02-01",
+                endDate: "2025-03-01",
+                description: "ZKSync Protocol est une solution de mise à l'échelle Layer 2 utilisant des preuves à connaissance nulle pour améliorer la vitesse et réduire les coûts des transactions.",
+                steps: [
+                    "Bridgez au moins 0.1 ETH vers ZKSync",
+                    "Effectuez au moins 10 transactions sur l'écosystème",
+                    "Utilisez au moins 3 applications différentes construites sur ZKSync",
+                    "Maintenez un solde minimum pendant 14 jours"
+                ],
+                website: "https://exemple-zksync.io",
+                documentation: "https://docs.zksync.io",
+                value: 200
+            },
+            {
+                id: 4,
+                name: "GameFi Heroes",
+                ticker: "HERO",
+                logo: "/api/placeholder/40/40",
+                reward: "100 HERO + NFT de personnage rare",
+                status: "upcoming",
+                category: "gamefi",
+                startDate: "2025-03-15",
+                endDate: "2025-04-15",
+                description: "GameFi Heroes est un jeu Play-to-Earn où vous collectionnez des héros, complétez des quêtes et gagnez des récompenses en jetons.",
+                steps: [
+                    "Créez un compte sur la plateforme GameFi Heroes",
+                    "Complétez le tutoriel du jeu",
+                    "Atteignez le niveau 10 avec au moins un héros",
+                    "Participez à 5 batailles PvP",
+                    "Invitez 2 amis à rejoindre le jeu"
+                ],
+                website: "https://exemple-gamefiheroes.com",
+                documentation: "https://docs.gamefiheroes.com",
+                value: 250
+            },
+            {
+                id: 5,
+                name: "DeFi Kingdom",
+                ticker: "KING",
+                logo: "/api/placeholder/40/40",
+                reward: "20-100 KING",
+                status: "ended",
+                category: "defi",
+                startDate: "2025-01-01",
+                endDate: "2025-02-01",
+                description: "DeFi Kingdom combine DeFi et gaming en permettant aux utilisateurs de staker, farmer et échanger des tokens tout en jouant à un jeu inspiré par des RPG.",
+                steps: [
+                    "Déposer au moins 500$ en valeur de crypto dans le protocole",
+                    "Staker des LP tokens pendant au moins 30 jours",
+                    "Compléter 10 quêtes dans le jeu",
+                    "Recruter au moins 3 héros"
+                ],
+                website: "https://exemple-defikingdom.io",
+                documentation: "https://docs.defikingdom.io",
+                value: 80
+            },
+            {
+                id: 6,
+                name: "GovernDAO",
+                ticker: "GDAO",
+                logo: "/api/placeholder/40/40",
+                reward: "50-200 GDAO",
+                status: "active",
+                category: "dao",
+                startDate: "2025-02-10",
+                endDate: "2025-03-20",
+                description: "GovernDAO est une DAO de gouvernance qui permet aux détenteurs de tokens de voter sur des propositions importantes et de diriger le futur du protocole.",
+                steps: [
+                    "Connectez votre wallet à la plateforme GovernDAO",
+                    "Participez à au moins 3 votes de gouvernance",
+                    "Créez au moins une proposition",
+                    "Déléguez vos droits de vote à un autre membre ou acceptez une délégation"
+                ],
+                website: "https://exemple-governdao.org",
+                documentation: null,
+                value: 180
+            }
+        ];
+        
+        // Fonction pour afficher les airdrops
+        function renderAirdrops(airdropsToRender) {
+            const container = document.getElementById('airdrops-container');
+            container.innerHTML = '';
+            
+            if (airdropsToRender.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-result">
+                        <h3>Aucun airdrop trouvé</h3>
+                        <p>Essayez de modifier vos filtres ou votre recherche</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            airdropsToRender.forEach(airdrop => {
+                // Formatage des dates
+                const startDate = new Date(airdrop.startDate).toLocaleDateString('fr-FR', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                
+                const endDate = new Date(airdrop.endDate).toLocaleDateString('fr-FR', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                
+                // Traduction des catégories pour l'affichage
+                const categoryTranslation = {
+                    'defi': 'DeFi',
+                    'nft': 'NFT',
+                    'gamefi': 'GameFi',
+                    'layer2': 'Layer 2',
+                    'dao': 'DAO'
+                };
+                
+                // Traduction des statuts pour l'affichage
+                const statusTranslation = {
+                    'active': 'Actif',
+                    'upcoming': 'À venir',
+                    'ended': 'Terminé'
+                };
+                
+                // Création de la carte d'airdrop
+                const airdropCard = document.createElement('div');
+                airdropCard.className = 'airdrop-card';
+                airdropCard.innerHTML = `
+                    <div class="card-header">
+                        <img src="${airdrop.logo}" alt="${airdrop.name} logo">
+                        <div class="token-info">
+                            <h3>${airdrop.name}</h3>
+                            <span class="token-ticker">${airdrop.ticker}</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="status ${airdrop.status}">${statusTranslation[airdrop.status]}</div>
+                        <div class="reward">${airdrop.reward}</div>
+                        <div class="info-row">
+                            <span class="label">Date de début:</span>
+                            <span class="value">${startDate}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Date de fin:</span>
+                            <span class="value">${endDate}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Catégorie:</span>
+                            <span class="value">${categoryTranslation[airdrop.category]}</span>
+                        </div>
+                        <div class="description">
+                            ${airdrop.description}
+                        </div>
+                        <div class="steps">
+                            <h4>Comment participer:</h4>
+                            <ol>
+                                ${airdrop.steps.map(step => `<li>${step}</li>`).join('')}
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <button style="flex: 1;" onclick="window.open('${airdrop.website}', '_blank')">Site du projet</button>
+                            ${airdrop.documentation ? 
+                              `<button style="flex: 1;" onclick="window.open('${airdrop.documentation}', '_blank')">Documentation</button>` : 
+                              `<button style="flex: 1; opacity: 0.5; cursor: not-allowed;" disabled>Documentation N/A</button>`}
+                        </div>
+                        <button class="join-btn" onclick="window.open('${airdrop.website}', '_blank')">Participer maintenant</button>
+                    </div>
+                `;
+                
+                container.appendChild(airdropCard);
+            });
+        }
+        
+        // Filtre les airdrops en fonction des critères sélectionnés
+        function filterAirdrops() {
+            const statusFilter = document.getElementById('status-filter').value;
+            const categoryFilter = document.getElementById('category-filter').value;
+            const searchInput = document.getElementById('search-input').value.toLowerCase();
+            const sortBy = document.getElementById('sort-by').value;
+            
+            let filteredAirdrops = [...airdrops];
+            
+            // Filtre par statut
+            if (statusFilter !== 'all') {
+                filteredAirdrops = filteredAirdrops.filter(airdrop => airdrop.status === statusFilter);
+            }
+            
+            // Filtre par catégorie
+            if (categoryFilter !== 'all') {
+                filteredAirdrops = filteredAirdrops.filter(airdrop => airdrop.category === categoryFilter);
+            }
+            
+            // Filtre par recherche
+            if (searchInput) {
+                filteredAirdrops = filteredAirdrops.filter(airdrop => 
+                    airdrop.name.toLowerCase().includes(searchInput) || 
+                    airdrop.ticker.toLowerCase().includes(searchInput) || 
+                    airdrop.description.toLowerCase().includes(searchInput)
+                );
+            }
+            
+            // Tri des résultats
+            switch (sortBy) {
+                case 'date-desc':
+                    filteredAirdrops.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+                    break;
+                case 'date-asc':
+                    filteredAirdrops.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+                    break;
+                case 'value-desc':
+                    filteredAirdrops.sort((a, b) => b.value - a.value);
+                    break;
+                case 'value-asc':
+                    filteredAirdrops.sort((a, b) => a.value - b.value);
+                    break;
+            }
+            
+            renderAirdrops(filteredAirdrops);
+        }
+        
+        // Simule une mise à jour des données
+        function refreshData() {
+            const container = document.getElementById('airdrops-container');
+            container.innerHTML = '<div class="loading">Chargement des derniers airdrops...</div>';
+            
+            // Mise à jour de l'heure de dernière actualisation
+            const now = new Date();
+            const formattedTime = now.toLocaleDateString('fr-FR', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('update-time').textContent = formattedTime;
+            
+            // Simule un délai de chargement
+            setTimeout(() => {
+                filterAirdrops();
+            }, 1000);
+        }
+        
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            // Affichage initial des airdrops
+            renderAirdrops(airdrops);
+            
+            // Écouteurs d'événements pour les filtres
+            document.getElementById('status-filter').addEventListener('change', filterAirdrops);
+            document.getElementById('category-filter').addEventListener('change', filterAirdrops);
+            document.getElementById('sort-by').addEventListener('change', filterAirdrops);
+            document.getElementById('search-input').addEventListener('input', filterAirdrops);
+            
+            // Écouteur d'événement pour le bouton d'actualisation
+            document.getElementById('refresh-btn').addEventListener('click', refreshData);
+        });
+    </script>
+</body>
+</html>
